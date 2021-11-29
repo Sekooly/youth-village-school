@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="shortcut icon" href="favicon.ico">
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Connectez-vous grâce à votre Identifiant et Code d'accès pour accéder aux ressources Sekooly." />
+
+	<noscript>
+		<meta http-equiv="refresh" content="0; url=https://sekooly.com/no-script">
+	</noscript>
+	
+	<title>Connexion | Sekooly</title>
+	<script src="https://sekooly.github.io/SUPABASE/scripts/aes.js"></script>
+	<script src="https://sekooly.github.io/SUPABASE/scripts/utile.min.js"></script>
+	<script src="https://sekooly.github.io/SUPABASE/scripts/donnees_client.js"></script>
+
+
+
+	<script src="https://sekooly.github.io/SUPABASE/scripts/jquery.min.js"></script>
+	<script src="https://sekooly.github.io/SUPABASE/scripts/moment.js"></script>
+	<script type="text/javascript" src="https://sekooly.github.io/SUPABASE/scripts/hash.js"></script>
+
+
+
+</head> 
+
+
+<body>
+</body>
+
+
+
+
+
+<script type="text/javascript">
+	
+	function initialiser_site(){
+
+		//changer les donnees clients ici
+		nom_etablissement = "hibiscus"
+		
+
+		//récupérer le html
+		var el = document.createElement( 'html' );
+		data = get_resultat_brut("https://raw.githubusercontent.com/Sekooly/SUPABASE/main/docs/index.html")
+		
+		//remplacer 'src="scripts/' par 'src="https://sekooly.github.io/SUPABASE/scripts/'
+		data = data.replaceAll('src="scripts/' , 'src="https://sekooly.github.io/SUPABASE/scripts/')
+		//remplacer 'src="images/' par 'src="https://sekooly.github.io/SUPABASE/images/'
+		data = data.replaceAll('src="images/' , 'src="'+prefixe_image+'/')
+		data = data.replaceAll('href="images/' , 'href="'+prefixe_image+'/')
+
+		
+		
+
+		//console.log(data)
+		el.innerHTML = data
+
+		//tout ajouter
+		$("body").append(el.children[1])
+	}	
+
+	function alerte_si_vide(){
+		if ($("body")[0].innerText === "") alert("Votre navigateur ne peut pas ouvrir la plateforme SEKOOLY. Merci d'utiliser Mozilla Firefox ou Google Chrome.")
+	}
+
+	initialiser_site()
+	alerte_si_vide()
+
+</script>
+
+
+
+</html>

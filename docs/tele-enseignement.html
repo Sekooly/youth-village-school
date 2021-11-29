@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<link rel="manifest" href="manifest.json">
+		<link rel="icon" href="favicon.ico">
+		<link rel="shortcut icon" href="favicon.ico">
+		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+		
+		<noscript>
+			<meta http-equiv="refresh" content="0; url=https://sekooly.com/no-script">
+		</noscript>
+		
+		<!-- MUST HAVES -->
+		<script type="text/javascript" src="https://sekooly.github.io/SUPABASE/scripts/jquery.min.js"></script>
+		<script type="text/javascript" src="https://sekooly.github.io/SUPABASE/scripts/aes.js"></script>
+		<script type="text/javascript" src="https://sekooly.github.io/SUPABASE/scripts/utile.min.js"></script>
+		<script type="text/javascript" src="https://sekooly.github.io/SUPABASE/scripts/donnees_client.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.css" rel="stylesheet">
+
+		<script type="text/javascript">
+
+			function load_head_sources(){
+
+				//récupérer TOUTES les sources utiles du head dans https://github.com/Sekooly/SUPABASE/docs/tele-enseignement.html
+				var el = document.createElement( 'html' );
+				var doc_html = recuperer_resultat_brut("https://raw.githubusercontent.com/Sekooly/SUPABASE/main/docs/tele-enseignement.html")
+				el.innerHTML = remplacer_scripts_et_images_HEAD(doc_html)
+				
+
+				var the_head = document.createElement("head")
+				the_head.innerHTML = el.children[0].innerHTML
+				//console.log(the_head)
+
+
+				//document.head.innerHTML += the_head.innerHTML
+
+				//pour chaque element du head, si c'est un script alors on l'append avec LOAD
+				//console.log(the_head.children.length)
+				for(i = 0 ; i<the_head.children.length ; i++){
+
+					if(the_head.children[i].tagName !== "META"){
+
+
+						//on copie le child entier
+						var element_du_head = document.createElement(the_head.children[i].tagName)
+
+
+						element_du_head.type = the_head.children[i].type || "text/javascript"
+						element_du_head.src = the_head.children[i].src
+						//console.log(element_du_head)
+
+
+						//ajouter l'élément SI LA SOURCE N'EXISTE PAS DEJA
+						var source_existante = $("[src='"+element_du_head.src+"']").length > 0 || $("[href='"+element_du_head.src+"']").length > 0
+						//console.log(source_existante)
+						if(!source_existante) document.head.appendChild(element_du_head)
+
+					}
+				}
+			}
+
+			function recuperer_resultat_brut(url){
+			    var xmlHttp = new XMLHttpRequest();
+			    xmlHttp.open( "GET", url, false ); // false for synchronous request
+			    xmlHttp.send( null );
+			    return xmlHttp.responseText;  
+			}
+
+
+			function remplacer_scripts_et_images_HEAD(data){
+
+				//remplacer 'src="scripts/' par 'src="https://sekooly.github.io/SUPABASE/scripts/'
+				data = data.replaceAll('src="scripts/' , 'src="https://sekooly.github.io/SUPABASE/scripts/')
+				//remplacer 'src="images/' par 'src="https://sekooly.github.io/SUPABASE/images/'
+				/*
+				data = data.replaceAll('src="images/' , 'src="https://sekooly.github.io/SUPABASE/images/')
+				data = data.replaceAll('href="images/' , 'href="https://sekooly.github.io/SUPABASE/images/')
+				*/
+
+				data = data.replaceAll('src="images/' , 'src="'+prefixe_image+'/')
+				data = data.replaceAll('href="images/' , 'src="'+prefixe_image+'/')
+
+				//remplacer 'src="openseadragon/openseadragon.min.js"' par 'src="https://sekooly.github.io/SUPABASE/openseadragon/openseadragon.min.js"'
+				data = data.replaceAll('src="openseadragon/openseadragon.min.js"' , 'src="https://sekooly.github.io/SUPABASE/openseadragon/openseadragon.min.js"')
+				
+				return data
+			}	
+
+			load_head_sources()
+		</script>
+
+
+	</head> 
+
+
+	<body id="corps">
+		
+	</body>
+
+	<script type="text/javascript">
+		function initialiser_tele_enseignement(){
+
+			//changer les donnees clients ici
+			nom_etablissement = "hibiscus"
+			
+
+			//récupérer le html
+			var el = document.createElement( 'html' );
+			data = recuperer_resultat_brut("https://raw.githubusercontent.com/Sekooly/SUPABASE/main/docs/tele-enseignement.html")
+			
+			//console.log(data)
+			el.innerHTML = remplacer_scripts_et_images(data)
+
+
+			//tout ajouter
+			//console.log(el.children[1].innerHTML)
+			while(el.children[1].firstChild) $("body").append(el.children[1].firstChild)
+
+
+			//var script_tele_enseignement = document.createElement('script');
+			//script_tele_enseignement.setAttribute('src','https://sekooly.github.io/SUPABASE/scripts/tele-enseignement.js');
+			//$("body").append(script_tele_enseignement);
+			
+			$( document ).ready(function() {
+				if($("#custom-css").text() === "")	appliquer_preferences()	
+			})
+
+		}
+
+		function remplacer_scripts_et_images(data){
+
+			//remplacer 'src="scripts/' par 'src="https://sekooly.github.io/SUPABASE/scripts/'
+			data = data.replaceAll('src="scripts/' , 'src="https://sekooly.github.io/SUPABASE/scripts/')
+			//remplacer 'src="images/' par 'src="https://sekooly.github.io/SUPABASE/images/'
+
+			/*
+			data = data.replaceAll('src="images/' , 'src="https://sekooly.github.io/SUPABASE/images/')
+			data = data.replaceAll('href="images/' , 'href="https://sekooly.github.io/SUPABASE/images/')
+			*/
+			data = data.replaceAll('src="images/' , 'src="'+prefixe_image+'/')
+			data = data.replaceAll('href="images/' , 'href="'+prefixe_image+'/')
+			data = data.replaceAll(hebergeur_defaut() , prefixe_image)
+
+
+			//remplacer 'src="openseadragon/openseadragon.min.js"' par 'src="https://sekooly.github.io/SUPABASE/openseadragon/openseadragon.min.js"'
+			data = data.replaceAll('src="openseadragon/openseadragon.min.js"' , 'src="https://sekooly.github.io/SUPABASE/openseadragon/openseadragon.min.js"')
+			
+
+			//console.log(data)
+
+			return data
+		}	
+
+		//alert(window.navigator.userAgent)
+		initialiser_tele_enseignement()
+
+
+	</script>
+
+</html>
